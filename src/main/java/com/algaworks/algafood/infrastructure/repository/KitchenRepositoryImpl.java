@@ -1,6 +1,7 @@
-package com.algaworks.algafood.jpa;
+package com.algaworks.algafood.infrastructure.repository;
 
 import com.algaworks.algafood.domain.model.Kitchen;
+import com.algaworks.algafood.domain.repository.KitchenRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,28 +11,31 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Component
-public class RegisterKitchen {
-
+public class KitchenRepositoryImpl implements KitchenRepository {
     @PersistenceContext
     private EntityManager manager;
 
+    @Override
     public List<Kitchen> list() {
         TypedQuery<Kitchen> query = manager.createQuery("from Kitchen", Kitchen.class);
         return query.getResultList();
     }
 
     @Transactional
-    public Kitchen add (Kitchen kitchen) {
+    @Override
+    public Kitchen save (Kitchen kitchen) {
         return manager.merge(kitchen);
     }
 
-    public Kitchen find(Long id) {
+    @Override
+    public Kitchen byId(Long id) {
         return manager.find(Kitchen.class, id);
     }
 
     @Transactional
-    public void delete(Kitchen kitchen) {
-        kitchen = find(kitchen.getId());
+    @Override
+    public void remove(Kitchen kitchen) {
+        kitchen = byId(kitchen.getId());
         manager.remove(kitchen);
     }
 }
