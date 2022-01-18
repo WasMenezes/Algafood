@@ -5,10 +5,10 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
+@Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Entity
-public class Kitchen {
+public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -16,4 +16,7 @@ public class Kitchen {
 
     @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private String description;
 }

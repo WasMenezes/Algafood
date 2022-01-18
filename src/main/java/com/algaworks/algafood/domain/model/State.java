@@ -5,10 +5,10 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
+@Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Entity
-public class Kitchen {
+public class State {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
