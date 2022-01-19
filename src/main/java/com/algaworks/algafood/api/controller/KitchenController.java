@@ -4,12 +4,10 @@ import com.algaworks.algafood.api.model.KitchensXmlWrapper;
 import com.algaworks.algafood.domain.model.Kitchen;
 import com.algaworks.algafood.domain.repository.KitchenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,5 +35,10 @@ public class KitchenController {
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
     public KitchensXmlWrapper listXml() {
         return new KitchensXmlWrapper(kitchenRepository.list());
+    }
+
+    @PostMapping
+    public ResponseEntity<Kitchen> add(@RequestBody Kitchen kitchen) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(kitchenRepository.save(kitchen));
     }
 }
