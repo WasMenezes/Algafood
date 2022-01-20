@@ -2,13 +2,13 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
+import com.algaworks.algafood.domain.service.RegisterRestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
@@ -17,6 +17,9 @@ public class RestaurantController {
 
     @Autowired
     private RestaurantRepository restaurantRepository;
+
+    @Autowired
+    private RegisterRestaurantService registerRestaurantService;
 
     @GetMapping
     public ResponseEntity<List<Restaurant>> listRestaurants() {
@@ -30,6 +33,15 @@ public class RestaurantController {
             return ResponseEntity.ok(restaurantRepository.byId(restaurantId));
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody Restaurant restaurant) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(registerRestaurantService.save(restaurant));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }
