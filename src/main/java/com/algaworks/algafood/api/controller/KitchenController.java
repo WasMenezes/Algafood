@@ -3,7 +3,9 @@ package com.algaworks.algafood.api.controller;
 import com.algaworks.algafood.api.model.KitchensXmlWrapper;
 import com.algaworks.algafood.domain.model.Kitchen;
 import com.algaworks.algafood.domain.repository.KitchenRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,5 +42,30 @@ public class KitchenController {
     @PostMapping
     public ResponseEntity<Kitchen> add(@RequestBody Kitchen kitchen) {
         return ResponseEntity.status(HttpStatus.CREATED).body(kitchenRepository.save(kitchen));
+    }
+
+    @PutMapping("/{kitchenId}")
+    public ResponseEntity<Kitchen> update(@PathVariable Long kitchenId, @RequestBody Kitchen kitchen) {
+        Kitchen kitchenActual = kitchenRepository.byId(kitchenId);
+        if (kitchenActual != null) {
+            BeanUtils.copyProperties(kitchen, kitchenActual, "id");
+            kitchenRepository.save(kitchenActual);
+            return ResponseEntity.ok(kitchenActual);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{kitchenId}")
+    public ResponseEntity<Kitchen> delete(@PathVariable Long kitchenId) {
+        try {
+            Kitchen kitchenActual = kitchenRepository.byId(kitchenId);
+            if (kitchenActual != null) {
+                kitchenRepository.remove(kitchenActual);
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.notFound().build();
+        } catch (DataIntegrityViolationException exception) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }
