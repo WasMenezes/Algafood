@@ -44,4 +44,15 @@ public class RestaurantController {
         }
     }
 
+    @PutMapping("{restaurantId}")
+    public ResponseEntity<?> update(@PathVariable Long restaurantId, @RequestBody Restaurant restaurant) {
+        try {
+            Restaurant restaurantActual = this.restaurantRepository.byId(restaurantId);
+            if (restaurantActual == null) return ResponseEntity.notFound().build();
+            return ResponseEntity.ok().body(this.registerRestaurantService.save(restaurant));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
