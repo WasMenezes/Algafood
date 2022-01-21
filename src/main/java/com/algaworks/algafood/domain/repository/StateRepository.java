@@ -7,6 +7,6 @@ import java.util.List;
 public interface StateRepository {
     List<State> list();
     State byId(Long id);
-    State save(State State);
-    void remove(State State);
+    State save(State state);
+    void remove(Long stateId);
 }

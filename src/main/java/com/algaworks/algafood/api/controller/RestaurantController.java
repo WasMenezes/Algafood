@@ -1,8 +1,10 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.domain.exception.EntityInUseException;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
 import com.algaworks.algafood.domain.service.RegisterRestaurantService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,14 +46,27 @@ public class RestaurantController {
         }
     }
 
-    @PutMapping("{restaurantId}")
+    @PutMapping("/{restaurantId}")
     public ResponseEntity<?> update(@PathVariable Long restaurantId, @RequestBody Restaurant restaurant) {
         try {
             Restaurant restaurantActual = this.restaurantRepository.byId(restaurantId);
             if (restaurantActual == null) return ResponseEntity.notFound().build();
+            BeanUtils.copyProperties(restaurant, restaurantActual, "id");
             return ResponseEntity.ok().body(this.registerRestaurantService.save(restaurant));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{restaurantId}")
+    public ResponseEntity<?> delete(@PathVariable Long restaurantId) {
+        try {
+            this.registerRestaurantService.delete(restaurantId);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (EntityInUseException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 

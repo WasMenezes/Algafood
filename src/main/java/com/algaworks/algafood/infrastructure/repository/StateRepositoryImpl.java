@@ -2,6 +2,7 @@ package com.algaworks.algafood.infrastructure.repository;
 
 import com.algaworks.algafood.domain.model.State;
 import com.algaworks.algafood.domain.repository.StateRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +24,8 @@ public class StateRepositoryImpl implements StateRepository {
 
     @Transactional
     @Override
-    public State save (State State) {
-        return manager.merge(State);
+    public State save (State state) {
+        return manager.merge(state);
     }
 
     @Override
@@ -34,8 +35,9 @@ public class StateRepositoryImpl implements StateRepository {
 
     @Transactional
     @Override
-    public void remove(State State) {
-        State = byId(State.getId());
-        manager.remove(State);
+    public void remove(Long stateId) {
+        State state = byId(stateId);
+        if (state == null) throw new EmptyResultDataAccessException(1);
+        manager.remove(state);
     }
 }
