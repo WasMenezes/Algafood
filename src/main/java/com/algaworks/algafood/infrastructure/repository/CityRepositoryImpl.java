@@ -23,8 +23,8 @@ public class CityRepositoryImpl implements CityRepository {
 
     @Transactional
     @Override
-    public City save (City City) {
-        return manager.merge(City);
+    public City save (City city) {
+        return manager.merge(city);
     }
 
     @Override
@@ -34,8 +34,8 @@ public class CityRepositoryImpl implements CityRepository {
 
     @Transactional
     @Override
-    public void remove(City City) {
-        City = byId(City.getId());
-        manager.remove(City);
+    public void remove(Long cityId) {
+        City city = byId(cityId);
+        manager.remove(city);
     }
 }
