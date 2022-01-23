@@ -3,7 +3,7 @@ package com.algaworks.algafood.infrastructure.repository;
 import com.algaworks.algafood.domain.model.Kitchen;
 import com.algaworks.algafood.domain.repository.KitchenRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -11,7 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-@Component
+@Repository
 public class KitchenRepositoryImpl implements KitchenRepository {
     @PersistenceContext
     private EntityManager manager;
@@ -39,5 +39,12 @@ public class KitchenRepositoryImpl implements KitchenRepository {
         Kitchen kitchen = byId(kitchenId);
         if (kitchen == null) throw new EmptyResultDataAccessException(1);
         manager.remove(kitchen);
+    }
+
+    @Override
+    public List<Kitchen> byName(String name) {
+        return manager.createQuery("from Kitchen where name like :name", Kitchen.class)
+                .setParameter("name", "%" + name + "%")
+                .getResultList();
     }
 }

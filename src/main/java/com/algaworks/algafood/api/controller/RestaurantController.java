@@ -4,14 +4,18 @@ import com.algaworks.algafood.domain.exception.EntityInUseException;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
 import com.algaworks.algafood.domain.service.RegisterRestaurantService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/restaurants")
@@ -69,5 +73,29 @@ public class RestaurantController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @PatchMapping("/{restaurantId}")
+    public ResponseEntity<?> partialUpdate(@PathVariable Long restaurantId,
+                                           @RequestBody Map<String, Object> fields) {
+        Restaurant restaurantActual = this.restaurantRepository.byId(restaurantId);
+        if (restaurantActual == null) return ResponseEntity.notFound().build();
+
+        merge(fields, restaurantActual);
+        return update(restaurantId, restaurantActual);
+    }
+
+    private void merge(Map<String, Object> fields, Restaurant restaurantDestiny) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Restaurant restaurant = objectMapper.convertValue(fields, Restaurant.class);
+
+        fields.forEach((nameProperty, valueProperty) -> {
+            Field field = ReflectionUtils.findField(Restaurant.class, nameProperty);
+            field.setAccessible(true);
+
+            Object newValue = ReflectionUtils.getField(field, restaurant);
+            ReflectionUtils.setField(field, restaurantDestiny, newValue);
+        });
+    }
+
 
 }

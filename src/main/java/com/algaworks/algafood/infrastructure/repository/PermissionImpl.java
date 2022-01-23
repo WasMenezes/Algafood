@@ -3,6 +3,7 @@ package com.algaworks.algafood.infrastructure.repository;
 import com.algaworks.algafood.domain.model.Permission;
 import com.algaworks.algafood.domain.repository.PermissionRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -10,7 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-@Component
+@Repository
 public class PermissionImpl implements PermissionRepository {
     @PersistenceContext
     private EntityManager manager;

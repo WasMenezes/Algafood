@@ -2,7 +2,7 @@ package com.algaworks.algafood.infrastructure.repository;
 
 import com.algaworks.algafood.domain.model.PaymentMethod;
 import com.algaworks.algafood.domain.repository.PaymentMethodRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-@Component
+@Repository
 public class PaymentMethodImpl implements PaymentMethodRepository {
     @PersistenceContext
     private EntityManager manager;
