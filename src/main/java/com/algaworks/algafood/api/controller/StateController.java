@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/states")
@@ -25,16 +26,16 @@ public class StateController {
 
     @GetMapping
     public ResponseEntity<List<State>> list() {
-        return ResponseEntity.ok(this.stateRepository.list());
+        return ResponseEntity.ok(this.stateRepository.findAll());
     }
 
     @GetMapping("/{stateId}")
     public ResponseEntity<State> getById(@PathVariable Long stateId) {
-        State state = this.stateRepository.byId(stateId);
-        if (state == null) {
+        Optional<State> state = this.stateRepository.findById(stateId);
+        if (state.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(state);
+        return ResponseEntity.ok(state.get());
     }
 
     @PostMapping
@@ -45,7 +46,7 @@ public class StateController {
     @PutMapping("/{stateId}")
     public ResponseEntity<?> update(@PathVariable Long stateId, @RequestBody State state) {
         try {
-            State stateActual = this.stateRepository.byId(stateId);
+            Optional<State> stateActual = this.stateRepository.findById(stateId);
             if (stateActual == null) return ResponseEntity.notFound().build();
             BeanUtils.copyProperties(state, stateActual, "id");
             return ResponseEntity.ok().body(this.registerStateService.save(state));

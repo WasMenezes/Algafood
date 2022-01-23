@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/kitchens")
@@ -25,14 +26,14 @@ public class KitchenController {
 
     @GetMapping()
     public List<Kitchen> list() {
-        return kitchenRepository.list();
+        return kitchenRepository.findAll();
     }
 
     @GetMapping("/{kitchenId}")
     public ResponseEntity<Kitchen> search(@PathVariable Long kitchenId) {
-        Kitchen kitchen =  kitchenRepository.byId(kitchenId);
-        if (kitchen != null) {
-            return ResponseEntity.ok(kitchen);
+        Optional<Kitchen> kitchen =  kitchenRepository.findById(kitchenId);
+        if (kitchen.isPresent()) {
+            return ResponseEntity.ok(kitchen.get());
         }
         return ResponseEntity.notFound().build();
     }
@@ -44,11 +45,11 @@ public class KitchenController {
 
     @PutMapping("/{kitchenId}")
     public ResponseEntity<Kitchen> update(@PathVariable Long kitchenId, @RequestBody Kitchen kitchen) {
-        Kitchen kitchenActual = kitchenRepository.byId(kitchenId);
-        if (kitchenActual != null) {
-            BeanUtils.copyProperties(kitchen, kitchenActual, "id");
-            kitchenService.save(kitchenActual);
-            return ResponseEntity.ok(kitchenActual);
+        Optional<Kitchen> kitchenActual = kitchenRepository.findById(kitchenId);
+        if (kitchenActual.isPresent()) {
+            BeanUtils.copyProperties(kitchen, kitchenActual.get(), "id");
+            kitchenService.save(kitchenActual.get());
+            return ResponseEntity.ok(kitchenActual.get());
         }
         return ResponseEntity.notFound().build();
     }

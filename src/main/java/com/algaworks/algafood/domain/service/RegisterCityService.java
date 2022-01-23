@@ -22,7 +22,7 @@ public class RegisterCityService {
 
     public void delete(Long cityId) {
         try {
-            cityRepository.remove(cityId);
+            cityRepository.deleteById(cityId);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(String.format("Não existe um cadastro de cidade com código %d", cityId));
         } catch (DataIntegrityViolationException e) {

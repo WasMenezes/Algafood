@@ -17,13 +17,22 @@ public class RegisterRestaurantService {
     @Autowired
     private RestaurantRepository restaurantRepository;
 
+    @Autowired
+    private KitchenRepository kitchenRepository;
+
     public Restaurant save(Restaurant restaurant) {
+        Long kitchenId = restaurant.getKitchen().getId();
+        Kitchen kitchen = kitchenRepository.findById(kitchenId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Não existe cadastro de cozinha com o código %d", kitchenId)
+                ));
+        restaurant.setKitchen(kitchen);
         return this.restaurantRepository.save(restaurant);
     }
 
     public void delete(Long restaurantId) {
         try {
-            restaurantRepository.remove(restaurantId);
+            restaurantRepository.deleteById(restaurantId);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(String.format("Não existe um cadastro de restaurante com código %d", restaurantId));
         } catch (DataIntegrityViolationException e) {
