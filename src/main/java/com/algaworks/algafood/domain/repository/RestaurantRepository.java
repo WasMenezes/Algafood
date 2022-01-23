@@ -8,9 +8,13 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
+public interface RestaurantRepository extends JpaRepository<Restaurant, Long>, RestaurantRepositoryQueries{
 
     List<Restaurant> findByShippingFeeBetween(BigDecimal initialFee, BigDecimal endFee);
 
     Restaurant consultByName(String name, Long kitchenId);
+
+    List<Restaurant> find(String name,
+                          BigDecimal shippingFeeInitial,
+                          BigDecimal shippingFeeEnd);
 }
