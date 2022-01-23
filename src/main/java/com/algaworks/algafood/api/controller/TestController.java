@@ -19,6 +19,6 @@ public class TestController {
 
     @GetMapping("kitchens/by-name")
     public List<Kitchen> kitchensByName(@RequestParam String name) {
-        return kitchenRepository.findByName(name);
+        return kitchenRepository.findByNameContaining(name);
     }
 }

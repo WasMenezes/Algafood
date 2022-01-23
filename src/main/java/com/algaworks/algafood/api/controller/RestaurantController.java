@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,6 +41,11 @@ public class RestaurantController {
             return ResponseEntity.ok(restaurant.get());
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/by-shipping-fee")
+    public ResponseEntity<List<Restaurant>> listRestaurantsByShippingFee(@RequestParam BigDecimal initialFee, @RequestParam BigDecimal endFee) {
+        return ResponseEntity.ok(restaurantRepository.findByShippingFeeBetween(initialFee, endFee));
     }
 
     @PostMapping
