@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.algaworks.algafood.infrastructure.repository.spec.RestaurantSpecs.withSimilarName;
+import static com.algaworks.algafood.infrastructure.repository.spec.RestaurantSpecs.withoutShippingFee;
+
 @RestController
 @RequestMapping("/teste")
 public class TestController {
@@ -28,7 +31,12 @@ public class TestController {
     }
 
     @GetMapping("restaurant/by-name")
-    public Restaurant kitchensByName(@RequestParam String name, @RequestParam Long kitchenId) {
+    public Restaurant restaurantByName(@RequestParam String name, @RequestParam Long kitchenId) {
         return restaurantRepository.consultByName(name, kitchenId);
+    }
+
+    @GetMapping("/restaurant/without-shipping-fee")
+    public List<Restaurant> restaurantWithoutShippingFee(@RequestParam String name) {
+        return restaurantRepository.findAll(withoutShippingFee().and(withSimilarName(name)));
     }
 }
