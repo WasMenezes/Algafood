@@ -3,13 +3,12 @@ package com.algaworks.algafood.infrastructure.repository;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepositoryQueries;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -22,26 +21,13 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
     public List<Restaurant> find(String name,
                                  BigDecimal shippingFeeInitial,
                                  BigDecimal shippingFeeEnd) {
-        var jpql = new StringBuilder();
-        jpql.append("from Restaurant where 0 = 0 ");
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
 
-        var parameters = new HashMap<String, Object>();
-        if (StringUtils.hasLength(name)) {
-            jpql.append("and name like :name ");
-            parameters.put("name", "%" + name + "%");
-        }
-        if (shippingFeeInitial != null) {
-            jpql.append("and shippingFee >= :shippingFeeInitial ");
-            parameters.put("shippingFeeInitial", shippingFeeInitial);
-        }
+        CriteriaQuery<Restaurant> criteria = builder.createQuery(Restaurant.class);
 
-        if (shippingFeeEnd != null) {
-            jpql.append("and shippingFee <= :shippingFeeEnd ");
-            parameters.put("shippingFeeEnd", shippingFeeEnd);
-        }
+        criteria.from(Restaurant.class);
 
-        TypedQuery<Restaurant> query = manager.createQuery(jpql.toString(), Restaurant.class);
-        parameters.forEach((nameParameter, parameter) -> query.setParameter(nameParameter, parameter));
-        return query.getResultList();
+        return manager.createQuery(criteria)
+                .getResultList();
     }
 }
