@@ -9,4 +9,6 @@ public interface RestaurantRepositoryQueries {
     List<Restaurant> find(String name,
                           BigDecimal shippingFeeInitial,
                           BigDecimal shippingFeeEnd);
+
+    List<Restaurant> findWithoutShippingFee(String name);
 }
