@@ -43,11 +43,6 @@ public class RestaurantController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/by-shipping-fee")
-    public ResponseEntity<List<Restaurant>> listRestaurantsByShippingFee(String name, BigDecimal initialFee, BigDecimal endFee) {
-        return ResponseEntity.ok(restaurantRepository.find(name, initialFee, endFee));
-    }
-
     @PostMapping
     public ResponseEntity<?> save(@RequestBody Restaurant restaurant) {
         try {
