@@ -57,8 +57,8 @@ public class RestaurantController {
         try {
             Optional<Restaurant> restaurantActual = this.restaurantRepository.findById(restaurantId);
             if (restaurantActual == null) return ResponseEntity.notFound().build();
-            BeanUtils.copyProperties(restaurant, restaurantActual, "id");
-            return ResponseEntity.ok().body(this.registerRestaurantService.save(restaurant));
+            BeanUtils.copyProperties(restaurant, restaurantActual.get(), "id", "paymentMethods");
+            return ResponseEntity.ok().body(this.registerRestaurantService.save(restaurantActual.get()));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
