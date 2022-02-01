@@ -51,4 +51,7 @@ public class Restaurant {
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime lastUpdate;
+
+    @OneToMany(mappedBy = "restaurant")
+    private List<Product> products = new ArrayList<>();
 }
