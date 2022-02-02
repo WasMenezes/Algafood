@@ -31,7 +31,11 @@ public class RestaurantController {
 
     @GetMapping
     public ResponseEntity<List<Restaurant>> listRestaurants() {
-        return ResponseEntity.ok(restaurantRepository.findAll());
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+        System.out.println(restaurants.get(0).getName());
+
+        restaurants.get(0).getPaymentMethods().forEach(System.out::println);
+        return ResponseEntity.ok(restaurants);
     }
 
     @GetMapping("/{restaurantId}")
@@ -98,6 +102,4 @@ public class RestaurantController {
             ReflectionUtils.setField(field, restaurantDestiny, newValue);
         });
     }
-
-
 }
