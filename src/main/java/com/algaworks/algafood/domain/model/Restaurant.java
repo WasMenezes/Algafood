@@ -30,7 +30,7 @@ public class Restaurant {
 
 //    @JsonIgnore
     @JsonIgnoreProperties("hibernateLazyInitializer")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="kitchen_id")
     private Kitchen kitchen;
 

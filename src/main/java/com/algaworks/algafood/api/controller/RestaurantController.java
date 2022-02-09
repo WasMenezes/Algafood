@@ -32,9 +32,6 @@ public class RestaurantController {
     @GetMapping
     public ResponseEntity<List<Restaurant>> listRestaurants() {
         List<Restaurant> restaurants = restaurantRepository.findAll();
-        System.out.println(restaurants.get(0).getName());
-
-        restaurants.get(0).getPaymentMethods().forEach(System.out::println);
         return ResponseEntity.ok(restaurants);
     }
 
