@@ -54,6 +54,10 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.algaworks</groupId>
       <artifactId>algafood-api</artifactId>
       <version>0.0.1-SNAPSHOT</version>
