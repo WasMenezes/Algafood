@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name="tb_group")
 public class Group {
 
     @Id
